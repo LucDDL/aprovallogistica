@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+  <title>Formulário de Aprovação</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      
+    }
+    .card-content{
+        margin-top: 50PX;
+    }
+    
+
+    .card-header{
+        background-color: blue;
+        height: 52px;
+        
+    }
+    .title{
+        color: aliceblue;
+        margin-top: 5px;
+        margin-left: 100px;
+    }
+   
+  </style>
+</head>
+<body>
+  <div class="card" style="width: 400px; height: 320PX;">
+    <header class="card-header">
+        <h1 class="title">APROVAÇÃO</h1>
+    </header>
+    <div class="card-content">
+      
+      <form id="approvalForm">
+        <div class="field">
+          <label class="label"><h2>Aprovar Custo</h2></label>
+          <div class="control">
+            <label class="radio">
+              <input type="radio" name="approval" value="sim">
+              <strong>SIM</strong>
+            </label>
+            <label class="radio">
+              <input type="radio" name="approval" value="nao">
+              <strong>NÂO</strong>
+            </label>
+          </div>
+        </div>
+        <div class="field">
+          <div class="control">
+            <button class="button is-primary is-fullwidth" type="button" id="submitButton">Enviar Resposta</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const form = document.getElementById('approvalForm');
+      const submitButton = document.getElementById('submitButton');
+      
+      submitButton.addEventListener('click', function () {
+        const selectedValue = document.querySelector('input[name="approval"]:checked');
+        
+        if (selectedValue) {
+          const webhookURL = 'https://hook.us1.make.com/5gqablu4mp5j8myjo8dz9rwqzv26wy56';
+          const payload = {
+            approval: selectedValue.value
+          };
+
+          fetch(webhookURL, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+          })
+          .then(response => {
+            if (response.ok) {
+              alert('Resposta enviada com sucesso!');
+            } else {
+              alert('Ocorreu um erro ao enviar a resposta.');
+            }
+          })
+          .catch(error => {
+            console.error('Erro:', error);
+            alert('Ocorreu um erro ao enviar a resposta.');
+          });
+        } else {
+          alert('Por favor, selecione uma opção.');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
